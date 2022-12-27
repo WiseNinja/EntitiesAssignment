@@ -30,7 +30,7 @@ namespace EntitiesPresenter
                     services.AddSingleton<MainWindow>();
                     services.AddTransient<IEntitiesPresenterViewModel, EntitiesPresenterViewModel>();
                     services.AddMessagePipe();
-                    services.AddMessagePipeNamedPipeInterprocess("messagepipe-namedpipe");
+                    services.AddMessagePipeTcpInterprocess("127.0.0.1", 5001);
                 })
                 .Build();
         }

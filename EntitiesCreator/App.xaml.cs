@@ -26,7 +26,7 @@ namespace AeronauticsAssignment
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddMessagePipe();
-                    services.AddMessagePipeNamedPipeInterprocess("messagepipe-namedpipe");
+                    services.AddMessagePipeTcpInterprocess("127.0.0.1", 5001);
                     services.AddSingleton<MainWindow>();
                     services.AddTransient<IEntitiesCreatorViewModel, EntitiesCreatorViewModel>();
                 })
