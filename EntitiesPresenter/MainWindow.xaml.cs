@@ -21,12 +21,9 @@ namespace EntitiesPresenter
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IEntitiesPresenterViewModel _entitiesPresenterViewModel;
-
         public MainWindow(IEntitiesPresenterViewModel entitiesPresenterViewModel)
         {
-            _entitiesPresenterViewModel = entitiesPresenterViewModel;
-            DataContext = _entitiesPresenterViewModel;
+            DataContext = entitiesPresenterViewModel;
             InitializeComponent();
         }
     }
