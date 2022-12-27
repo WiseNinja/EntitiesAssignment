@@ -28,19 +28,26 @@ namespace EntitiesPresenter.ViewModels
 
         public async void SubscribeAsync()
         {
-            await _subscriber.SubscribeAsync("entityDetails", x =>
+            try
             {
-                EntityModel entityModel = new EntityModel
+                await _subscriber.SubscribeAsync("entityDetails", x =>
                 {
-                    Name = x.Name,
-                    X = x.X,
-                    Y = x.Y
-                };
-                Application.Current.Dispatcher.Invoke(() => EntitiesToShowInCanvas.Add(entityModel));
-              
-                OnPropertyChanged(nameof(EntitiesToShowInCanvas));
+                    EntityModel entityModel = new EntityModel
+                    {
+                        Name = x.Name,
+                        X = x.X,
+                        Y = x.Y
+                    };
+                    Application.Current.Dispatcher.Invoke(() => EntitiesToShowInCanvas.Add(entityModel));
 
-            });
+                    OnPropertyChanged(nameof(EntitiesToShowInCanvas));
+
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred during entities processing, details:{ex}");
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

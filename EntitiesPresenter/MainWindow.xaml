@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EntitiesPresenter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Entity Presenter" Height="450" Width="1000">
     <Viewbox>
     <Grid>
-        <Image  Source="worldmap-countries-hd.jpg"  Margin="43,33,0,0" />
+            <Image  Source="worldmap-countries-hd.jpg"  Margin="43,33,0,0"  HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None"/>
         <ItemsControl ItemsSource="{Binding Path=EntitiesToShowInCanvas}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -24,8 +24,8 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <Ellipse Width="10" Height="10" Fill="Red"/>
-                        <TextBlock Text="{Binding Name}"></TextBlock>
+                        <Ellipse Width="50" Height="50" Fill="Red"/>
+                        <TextBlock Text="{Binding Name}" FontSize="20" HorizontalAlignment="Center"></TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
