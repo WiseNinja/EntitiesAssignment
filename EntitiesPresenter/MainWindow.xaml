@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:EntitiesPresenter"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Viewbox>
     <Grid>
-        <Image  Source="worldmap-countries-hd.jpg" HorizontalAlignment="Left" Height="381" Margin="43,33,0,0" VerticalAlignment="Top" Width="710"/>
+        <Image  Source="worldmap-countries-hd.jpg"  Margin="43,33,0,0" />
         <ItemsControl ItemsSource="{Binding Path=EntitiesToShowInCanvas}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -30,4 +31,5 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
     </Grid>
+    </Viewbox>
 </Window>
