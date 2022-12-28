@@ -1,15 +1,9 @@
 ﻿using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using EntitiesCreator.Interfaces;
 using EntitiesCreator.ViewModels;
-using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
+using XDMessaging;
 
 namespace AeronauticsAssignment
 {
@@ -25,10 +19,9 @@ namespace AeronauticsAssignment
                 .CreateDefaultBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddMessagePipe();
-                    services.AddMessagePipeTcpInterprocess("127.0.0.1", 5001);
                     services.AddSingleton<MainWindow>();
                     services.AddTransient<IEntitiesCreatorViewModel, EntitiesCreatorViewModel>();
+                    services.AddTransient<XDMessagingClient>();
                 })
                 .Build();
         }

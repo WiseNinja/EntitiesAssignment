@@ -1,35 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows;
 using System.Windows.Input;
 using Common.DTOs;
 using EntitiesCreator.Interfaces;
 using EntitiesCreator.Models;
 using GalaSoft.MvvmLight.Command;
-using MessagePipe;
+using Newtonsoft.Json;
+using XDMessaging;
 
 namespace EntitiesCreator.ViewModels
 {
     public class EntitiesCreatorViewModel : IEntitiesCreatorViewModel
     {
-        private readonly IDistributedPublisher<string, EntityDetailsDto> _publisher;
+        private IXDBroadcaster _broadcaster;
+
         public ICommand ButtonCommand { get; private set; }
 
         public EntityModel EntityModel { get; set; }
 
-        public EntitiesCreatorViewModel(IDistributedPublisher<string, EntityDetailsDto> publisher)
+        public EntitiesCreatorViewModel(XDMessagingClient client)
         {
-            _publisher = publisher;
+            _broadcaster = client.Broadcasters
+                .GetBroadcasterForMode(XDTransportMode.HighPerformanceUI);
+
             EntityModel = new EntityModel();
-            ButtonCommand = new RelayCommand(PublishAsync);
+            ButtonCommand = new RelayCommand(Publish);
         }
 
-        public async void PublishAsync()
+        public void Publish()
         {
+           
             try
             {
                 EntityDetailsDto entityDetailsDto = new EntityDetailsDto
@@ -38,7 +37,8 @@ namespace EntitiesCreator.ViewModels
                     X = EntityModel.X,
                     Y = EntityModel.Y
                 };
-                await _publisher.PublishAsync("entityDetails", entityDetailsDto);
+                string entityDetailsDtoSerialized = JsonConvert.SerializeObject(entityDetailsDto);
+                _broadcaster.SendToChannel("entityDetails", entityDetailsDtoSerialized);
             }
             catch (Exception ex)
             {

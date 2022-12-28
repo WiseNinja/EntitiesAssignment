@@ -2,47 +2,57 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Common.DTOs;
 using EntitiesPresenter.Interfaces;
 using EntitiesPresenter.Models;
-using MessagePipe;
+using Newtonsoft.Json;
+using XDMessaging;
 
 namespace EntitiesPresenter.ViewModels
 {
-    public class EntitiesPresenterViewModel: IEntitiesPresenterViewModel, INotifyPropertyChanged
+    public class EntitiesPresenterViewModel : IEntitiesPresenterViewModel, INotifyPropertyChanged
     {
-        private readonly IDistributedSubscriber<string, EntityDetailsDto> _subscriber;
+        private readonly IXDListener _listener;
         public ObservableCollection<EntityModel> EntitiesToShowInCanvas { get; set; }
 
-        public EntitiesPresenterViewModel(IDistributedSubscriber<string, EntityDetailsDto> subscriber)
+        public EntitiesPresenterViewModel(XDMessagingClient client)
         {
             EntitiesToShowInCanvas = new ObservableCollection<EntityModel>();
-            _subscriber = subscriber;
-            SubscribeAsync();
+            _listener = client.Listeners
+                .GetListenerForMode(XDTransportMode.HighPerformanceUI);
+            _listener.RegisterChannel("entityDetails");
+            Subscribe();
         }
 
-        public async void SubscribeAsync()
+        public void Subscribe()
         {
             try
             {
-                await _subscriber.SubscribeAsync("entityDetails", x =>
+                _listener.MessageReceived += (o, e) =>
                 {
-                    EntityModel entityModel = new EntityModel
+                    if (e.DataGram.Channel == "entityDetails")
                     {
-                        Name = x.Name,
-                        X = x.X,
-                        Y = x.Y
-                    };
-                    Application.Current.Dispatcher.Invoke(() => EntitiesToShowInCanvas.Add(entityModel));
+                        EntityDetailsDto? receivedEntityDto = JsonConvert.DeserializeObject<EntityDetailsDto>(e.DataGram.Message);
+                        if (receivedEntityDto != null)
+                        {
+                            EntityModel entityModel = new EntityModel
+                            {
+                                Name = receivedEntityDto.Name,
+                                X = receivedEntityDto.X,
+                                Y = receivedEntityDto.Y
+                            };
+                            Application.Current.Dispatcher.Invoke(() => EntitiesToShowInCanvas.Add(entityModel));
+                            OnPropertyChanged(nameof(EntitiesToShowInCanvas));
+                        }
+                        else
+                        {
+                            Console.WriteLine("Was not able to deserialize entity details");
+                        }
 
-                    OnPropertyChanged(nameof(EntitiesToShowInCanvas));
-
-                });
+                    }
+                };
             }
             catch (Exception ex)
             {

@@ -12,10 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MessagePipe" Version="1.7.4" />
-    <PackageReference Include="MessagePipe.Interprocess" Version="1.7.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="XDMessaging" Version="5.0.6" />
   </ItemGroup>
 
   <ItemGroup>

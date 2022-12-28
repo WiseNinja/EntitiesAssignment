@@ -1,17 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using EntitiesPresenter.Interfaces;
 using EntitiesPresenter.ViewModels;
 using Microsoft.Extensions.Hosting;
-using MessagePipe;
-using MessagePipe.Interprocess;
+using XDMessaging;
 
 namespace EntitiesPresenter
 {
@@ -29,8 +21,7 @@ namespace EntitiesPresenter
                 {
                     services.AddSingleton<MainWindow>();
                     services.AddTransient<IEntitiesPresenterViewModel, EntitiesPresenterViewModel>();
-                    services.AddMessagePipe();
-                    services.AddMessagePipeTcpInterprocess("127.0.0.1", 5001);
+                    services.AddTransient<XDMessagingClient>();
                 })
                 .Build();
         }
